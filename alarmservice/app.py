@@ -38,7 +38,10 @@ class alarmservice:
         try:
             alarm_status= self.alarm.status()
             if alarm_status['StatusAnnex'] != 'armed':
+                logging.info('Arming the annex.')
                 self.alarm.arm_annex()
+            else:
+                logging.debug('Annex was already armed. Doing nothing.')
 
         except:
             logging.error('Could not arm annex.', exc_info=True)
@@ -62,5 +65,6 @@ def annex():
 
 if __name__ == '__main__':  # Script executed directly?
     service = alarmservice()
+    logging.info('Starting alarmservice.')
     app.run("0.0.0.0", port=5000, debug=False)  # Launch built-in web server and run this Flask webapp
     
