@@ -27,8 +27,6 @@ class alarmservice:
             self.alarm_password = config.get('Alarm', 'password')
             self.alarm_siteId = config.get('Alarm', 'siteId')
             self.alarm_panel_code = config.get('Alarm', 'panel_code')
-            self.arlo_email = config.get('Arlo', 'email')
-            self.arlo_password = config.get('Arlo', 'password')
             self.alarm = sectoralarm.connect(self.alarm_email, self.alarm_password, self.alarm_siteId, self.alarm_panel_code)
 
     def arm_annex(self):
@@ -38,7 +36,9 @@ class alarmservice:
         '''
         
         try:
-            self.alarm.arm_annex()
+            alarm_status= self.alarm.status()
+            if alarm_status['StatusAnnex'] != 'armed':
+                self.alarm.arm_annex()
 
         except:
             logging.error('Could not arm annex.', exc_info=True)
@@ -62,5 +62,5 @@ def annex():
 
 if __name__ == '__main__':  # Script executed directly?
     service = alarmservice()
-    app.run("0.0.0.0", port=5000, debug=True)  # Launch built-in web server and run this Flask webapp
+    app.run("0.0.0.0", port=5000, debug=False)  # Launch built-in web server and run this Flask webapp
     
